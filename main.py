@@ -1,6 +1,8 @@
 from fastapi import FastAPI
-from generate import initialized
+from generate import initialized, ui
 import pydantic
+import gradio as gr
+
 
 class Input(pydantic.BaseModel):
     prompts: str
@@ -12,7 +14,6 @@ class Output(pydantic.BaseModel):
 
 app = FastAPI()
 
-
 @app.post("/prompt")
 def prompt(_input: Input) -> Output:
     results = initialized(
@@ -21,3 +22,5 @@ def prompt(_input: Input) -> Output:
         top_p=_input.top_p,
     )
     return Output(results=results)
+
+app = gr.mount_gradio_app(app, ui, path="/webui")
