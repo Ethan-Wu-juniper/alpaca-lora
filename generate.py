@@ -121,6 +121,7 @@ class LlamaModel:
             )
         s = generation_output.sequences[0]
         output = self.tokenizer.decode(s)
+        torch.cuda.empty_cache()
         return output.split("### Response:")[1].strip()
 
 initialized = LlamaModel()
